@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { IProduct } from './product'
+import { ProductService } from './product.service';
+
 
 @Component({
     selector: 'pm-products',
@@ -8,14 +10,23 @@ import { IProduct } from './product'
 })
 export class ProductListComponent
                 implements OnInit {
-    ngOnInit(): void {
-        console.log('In OnInit');
+    /* private _productService:ProductService;
+    constructor(productService: ProductService){
+        this._productService = productService;
+    } */
+
+    // the following notation is a shortcut equivalent to
+    // the above commented block, whereby a private
+    // backing field, productService is created and
+    // assigned to the injected service instance.
+    constructor(private productService: ProductService){
     }
+
     pageTitle : string = 'Product List';
     imageWidth : number = 50;
     imageMargin : number = 2;
     showImage : boolean = false;
-    _listFilter : string = 'cart';
+    _listFilter : string;
     get listFilter():string{
         return this._listFilter;
     }
@@ -25,32 +36,11 @@ export class ProductListComponent
     }
 
     filteredProducts : IProduct[];
-    products : IProduct[]=[
-        {
-            "productId": 1,
-            "productName": "Leaf Rake",
-            "productCode": "GDN-0011",
-            "releaseDate": "March 19, 2019",
-            "description": "Leaf rake with 48-inch wooden handle.",
-            "price": 19.95,
-            "starRating": 3.2,
-            "imageUrl": "assets/images/leaf_rake.png"
-        },
-        {
-            "productId": 2,
-            "productName": "Garden Cart",
-            "productCode": "GDN-0023",
-            "releaseDate": "March 18, 2019",
-            "description": "15 gallon capacity rolling garden cart",
-            "price": 32.99,
-            "starRating": 4.2,
-            "imageUrl": "assets/images/garden_cart.png"
-        }
-    ];
+    products : IProduct[];
 
-    constructor(){
+    ngOnInit(): void {
+        this.products = this.productService.getProducts();
         this.filteredProducts=this.products;
-        this.listFilter='cart';
     }
 
     toggleImage(): void {
